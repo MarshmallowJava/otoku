@@ -1,0 +1,15 @@
+.item-block {
+  border: 1px solid #000;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: #f9f9f9;
+}
+
+.output-row{
+    display: 'grid';
+    grid-template-columns: 30px 60px 50px auto 40px;
+    // color: '#666';
+}
