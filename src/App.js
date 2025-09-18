@@ -22,13 +22,48 @@ function App() {
   const removeItem = (index) => {
     const newItems = [...items];
     newItems.splice(index, 1);
+
+    //ランキング
+    rankItem(newItems);
+
     setItems(newItems);
   };
   const updateItem = (index, field, value) => {
+    //数値を更新
     const newItems = [...items];
     newItems[index][field] = value;
+
+    //ランキング
+    rankItem(newItems);
+
     setItems(newItems);
   };
+  const rankItem = (newItems) => {
+    // ソート
+    const sorted = [...newItems].slice().sort((a, b) => (a.price/a.amount)-(b.price/b.amount));
+
+    //順位データを作成
+    const rank = new Map();
+    let currentRank = 1;
+    sorted.forEach(item => {
+      if(item.price > 0 && item.amount > 0){
+        const unitPrice = item.price / item.amount;
+        if (!rank.has(unitPrice)) {
+          rank.set(unitPrice, currentRank);
+        }
+        currentRank++;
+      }
+    });
+
+    for(let item of newItems){
+      if(item.price > 0 && item.amount > 0){
+        const unitPrice = item.price / item.amount;
+        item.ranking = rank.get(unitPrice);
+      }else{
+        item.ranking = -1;
+      }
+    }
+  }
 
   //表示単位
   const [unit, setUnit] = useState("個");
@@ -56,6 +91,10 @@ function App() {
         {
           items.map((item, index) => (
             <div className='item-block'>
+              <div>
+                {(item.ranking > 0 ? (<h3>{item.ranking}番目にお得な商品</h3>):(<span></span>))}
+              </div>
+
               <div key={index} className="item-row">
                 {
                   <InputGroup>
